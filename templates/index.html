@@ -1,0 +1,659 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Deloitte | Business Rule Engine</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --deloitte-green: #86BC25;
+      --deloitte-dark-green: #2E7D32;
+      --deloitte-dark: #2C2C2C;
+      --deloitte-light: #F5F5F5;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .param-description {
+      display: none;
+      background-color: #f8fafc;
+      border-left: 4px solid var(--deloitte-green);
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      border-radius: 0 4px 4px 0;
+    }
+    .function-card:hover {
+      background-color: rgba(134, 188, 37, 0.05);
+      border-left: 3px solid var(--deloitte-green);
+    }
+    .level-info {
+      background-color: white;
+      border-radius: 6px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      border-top: 3px solid;
+    }
+    .level-0 {
+      border-top-color: var(--deloitte-green);
+    }
+    .level-1 {
+      border-top-color: #FFC72C;
+    }
+    .level-2 {
+      border-top-color: #D50000;
+    }
+    .level-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      margin-right: 0.75rem;
+    }
+    .badge-0 {
+      background-color: var(--deloitte-green);
+      color: white;
+    }
+    .badge-1 {
+      background-color: #FFC72C;
+      color: var(--deloitte-dark);
+    }
+    .badge-2 {
+      background-color: #D50000;
+      color: white;
+    }
+    .deloitte-header {
+      background-color: white;
+      border-bottom: 1px solid #e5e7eb;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .deloitte-btn-primary {
+      background-color: var(--deloitte-green);
+      color: white;
+      transition: all 0.2s;
+    }
+    .deloitte-btn-primary:hover {
+      background-color: var(--deloitte-dark-green);
+      transform: translateY(-1px);
+    }
+    .deloitte-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      border: 1px solid #e5e7eb;
+    }
+    .section-title {
+      color: var(--deloitte-dark);
+      position: relative;
+      padding-left: 1rem;
+    }
+    .section-title:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--deloitte-green);
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+<!-- Header -->
+<header class="deloitte-header py-4 px-6 sticky top-0 z-10">
+  <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <div class="flex items-center space-x-2">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 32C24.8366 32 32 24.8366 32 16C32 7.16344 24.8366 0 16 0C7.16344 0 0 7.16344 0 16C0 24.8366 7.16344 32 16 32Z" fill="#86BC25"/>
+        <path d="M22.4 9.6001H9.6V22.4001H22.4V9.6001Z" fill="white"/>
+      </svg>
+      <h1 class="text-xl font-bold text-gray-800">Deloitte Business Rule Engine</h1>
+    </div>
+    <div class="text-sm text-gray-600">
+      <i class="fas fa-user-circle mr-1"></i> Admin Dashboard
+    </div>
+  </div>
+</header>
+
+<main class="py-6 px-4 max-w-7xl mx-auto">
+  <!-- Dashboard Overview -->
+  <div class="mb-8 deloitte-card p-6">
+    <h2 class="text-2xl font-semibold mb-2 text-gray-800">Rule Engine Dashboard</h2>
+    <p class="text-gray-600 mb-4">Manage and execute business rules across customer, account, and transaction data.</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="bg-green-50 p-4 rounded-lg border border-green-100">
+        <div class="flex items-center">
+          <div class="p-2 rounded-full bg-green-100 text-green-600 mr-3">
+            <i class="fas fa-list-check"></i>
+          </div>
+          <div>
+            <h3 class="font-medium text-gray-700">Rules</h3>
+            <p class="text-2xl font-bold" id="rules-count">-</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+        <div class="flex items-center">
+          <div class="p-2 rounded-full bg-blue-100 text-blue-600 mr-3">
+            <i class="fas fa-database"></i>
+          </div>
+          <div>
+            <h3 class="font-medium text-gray-700">Functions</h3>
+            <p class="text-2xl font-bold">7</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-purple-50 p-4 rounded-lg border border-purple-100">
+        <div class="flex items-center">
+          <div class="p-2 rounded-full bg-purple-100 text-purple-600 mr-3">
+            <i class="fas fa-layer-group"></i>
+          </div>
+          <div>
+            <h3 class="font-medium text-gray-700">Levels</h3>
+            <p class="text-2xl font-bold">3</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Left Column -->
+    <div class="space-y-6">
+      <!-- Rules Section -->
+      <div class="deloitte-card p-6">
+        <h2 class="section-title text-xl font-semibold mb-4">📋 Business Rules</h2>
+        <div class="mb-4">
+          <pre id="rules" class="bg-gray-50 p-4 rounded overflow-auto text-sm whitespace-pre-wrap font-mono border border-gray-200 max-h-60"></pre>
+        </div>
+        <button onclick="fetchRules()" class="deloitte-btn-primary px-4 py-2 rounded-md font-medium">
+          <i class="fas fa-sync-alt mr-2"></i>Refresh Rules
+        </button>
+      </div>
+
+      <!-- Run Rule Section -->
+      <div class="deloitte-card p-6">
+        <h2 class="section-title text-xl font-semibold mb-4">▶️ Execute Rule</h2>
+        <div class="flex items-center space-x-2 mb-4">
+          <input id="rule_id_input" class="border px-3 py-2 rounded-md flex-grow" placeholder="Enter rule ID (e.g., rule_01)">
+          <button onclick="runRule()" class="deloitte-btn-primary px-4 py-2 rounded-md font-medium">
+            <i class="fas fa-play mr-1"></i>Run
+          </button>
+        </div>
+        <div id="rule_output" class="bg-gray-50 p-4 rounded-md overflow-auto text-sm border border-gray-200 max-h-60"></div>
+      </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="space-y-6">
+      <!-- Add Rule Section -->
+      <div class="deloitte-card p-6">
+        <h2 class="section-title text-xl font-semibold mb-4">🆕 Create New Rule</h2>
+
+        <div class="space-y-3 mb-4">
+          <div class="level-info level-0">
+            <div class="flex items-center mb-1">
+              <span class="level-badge badge-0">Level 0</span>
+              <h3 class="font-bold text-gray-800">Basic Data Retrieval</h3>
+            </div>
+            <p class="text-sm pl-8 text-gray-600">Foundational functions that fetch raw, unjoined data from the database. They are typically used as a base for analysis or filtering before applying any business logic or joining operations. They offer complete flexibility with multiple filtering options.</p>
+          </div>
+
+          <div class="level-info level-1">
+            <div class="flex items-center mb-1">
+              <span class="level-badge badge-1">Level 1</span>
+              <h3 class="font-bold text-gray-800">Joined Data Retrieval</h3>
+            </div>
+            <p class="text-sm pl-8 text-gray-600">Functions that combine two related entities such as customers and accounts, or accounts and transactions. They're commonly used for identifying relationships or cross-checking data between two tables. Ideal for use cases where a simple join operation is needed to understand dependencies or relationships in the data.</p>
+          </div>
+
+          <div class="level-info level-2">
+            <div class="flex items-center mb-1">
+              <span class="level-badge badge-2">Level 2</span>
+              <h3 class="font-bold text-gray-800">Super Function</h3>
+            </div>
+            <p class="text-sm pl-8 text-gray-600">Advanced utility that joins all three core tables: customers, accounts, and transactions. Allows detailed correlation and traceability across the entire customer lifecycle. Highly useful for detecting anomalies, customer behavior analytics, and policy compliance.</p>
+          </div>
+        </div>
+
+        <form id="add_rule_form" class="grid grid-cols-1 gap-3">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Rule ID</label>
+              <input name="rule_id" class="w-full border px-3 py-2 rounded-md" placeholder="rule_20">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Level</label>
+              <select name="level" class="w-full border px-3 py-2 rounded-md">
+                <option value="0">Level 0 (Basic Functions)</option>
+                <option value="1">Level 1 (Joined Functions)</option>
+                <option value="2">Level 2 (Super Functions)</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <input name="description" class="w-full border px-3 py-2 rounded-md" placeholder="Rule description">
+          </div>
+
+          <div class="grid grid-cols-3 gap-3">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Function</label>
+              <input name="function_name" class="w-full border px-3 py-2 rounded-md" placeholder="get_cust_acc">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Column</label>
+              <input name="column" class="w-full border px-3 py-2 rounded-md" placeholder="Column name">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Condition</label>
+              <input name="condition" class="w-full border px-3 py-2 rounded-md" placeholder=">">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Value</label>
+            <input name="value" class="w-full border px-3 py-2 rounded-md" placeholder="1000">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Custom Code</label>
+            <textarea name="code" class="w-full border px-3 py-2 rounded-md h-24" placeholder="Custom rule code using 'df' as DataFrame"></textarea>
+          </div>
+        </form>
+
+        <button onclick="addRule()" class="deloitte-btn-primary w-full mt-3 px-4 py-2 rounded-md font-medium">
+          <i class="fas fa-plus mr-2"></i>Add Rule
+        </button>
+      </div>
+    </div>
+  </div>
+
+<!-- Function Section -->
+<div class="mt-6 deloitte-card p-6">
+  <h2 class="section-title text-xl font-semibold mb-4">🧮 Data Functions</h2>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Column 1 -->
+    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+      <h3 class="font-medium mb-3 text-gray-800">Available Functions</h3>
+      <div class="space-y-3">
+
+        <!-- get_customers -->
+        <div class="function-card p-3 rounded-md cursor-pointer border border-gray-200" onclick="toggleDescription('get_customers_desc')">
+          <div class="flex items-center gap-2">
+            <span class="level-badge badge-0">L0</span>
+            <div class="font-semibold text-gray-800">get_customers</div>
+          </div>
+          <div class="text-sm text-gray-600 mt-1">Retrieves customer data with various filtering options</div>
+          <div id="get_customers_desc" class="param-description mt-2 text-sm space-y-1 hidden">
+            <div><strong>customer_id</strong>: ID(s) of customers to retrieve</div>
+            <div><strong>name</strong>: Exact or partial match for customer name</div>
+            <div><strong>city</strong>: Filter by city name(s)</div>
+            <div><strong>update_date</strong>: Filter specific dates (YYYY-MM-DD)</div>
+            <div><strong>exact_match</strong>: False allows partial matching</div>
+            <div><strong>min_update_date/max_update_date</strong>: Filter by date range</div>
+          </div>
+        </div>
+
+        <!-- get_accounts -->
+        <div class="function-card p-3 rounded-md cursor-pointer border border-gray-200" onclick="toggleDescription('get_accounts_desc')">
+          <div class="flex items-center gap-2">
+            <span class="level-badge badge-0">L0</span>
+            <div class="font-semibold text-gray-800">get_accounts</div>
+          </div>
+          <div class="text-sm text-gray-600 mt-1">Retrieves account data with filtering capabilities</div>
+          <div id="get_accounts_desc" class="param-description mt-2 text-sm space-y-1 hidden">
+            <div><strong>account_no</strong>: One or more account numbers</div>
+            <div><strong>account_type</strong>: Account type (e.g., savings, current)</div>
+            <div><strong>customer_id</strong>: Filter by customer IDs</div>
+            <div><strong>account_status</strong>: e.g., active, closed</div>
+            <div><strong>activation_date</strong>: Specific dates</div>
+            <div><strong>exact_match</strong>: Set to False for partial search</div>
+            <div><strong>min_activation_date/max_activation_date</strong>: Filter by date range</div>
+          </div>
+        </div>
+
+        <!-- get_transactions -->
+        <div class="function-card p-3 rounded-md cursor-pointer border border-gray-200" onclick="toggleDescription('get_transactions_desc')">
+          <div class="flex items-center gap-2">
+            <span class="level-badge badge-0">L0</span>
+            <div class="font-semibold text-gray-800">get_transactions</div>
+          </div>
+          <div class="text-sm text-gray-600 mt-1">Retrieves transaction data with various filters</div>
+          <div id="get_transactions_desc" class="param-description mt-2 text-sm space-y-1 hidden">
+            <div><strong>transaction_id</strong>: Filter by transaction ID(s)</div>
+            <div><strong>account_no</strong>: Account numbers involved</div>
+            <div><strong>customer_id</strong>: Customer IDs involved</div>
+            <div><strong>amount</strong>: Exact value(s)</div>
+            <div><strong>min_amount/max_amount</strong>: Range filters</div>
+            <div><strong>transaction_time</strong>: Timestamps (exact or list)</div>
+            <div><strong>min_transaction_time/max_transaction_time</strong>: Time window filter</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Column 2 -->
+    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+      <div class="space-y-3">
+
+        <!-- get_cust_acc -->
+        <div class="function-card p-3 rounded-md cursor-pointer border border-gray-200" onclick="toggleDescription('get_cust_acc_desc')">
+          <div class="flex items-center gap-2">
+            <span class="level-badge badge-1">L1</span>
+            <div class="font-semibold text-gray-800">get_cust_acc</div>
+          </div>
+          <div class="text-sm text-gray-600 mt-1">Joins customer and account data</div>
+          <div id="get_cust_acc_desc" class="param-description mt-2 text-sm space-y-1 hidden">
+            <div><strong>join_type</strong>: Type of join ('left', 'inner')</div>
+            <div><strong>customer_on</strong>: Column(s) in customer data to join on</div>
+            <div><strong>account_on</strong>: Column(s) in account data to join on</div>
+            <div><strong>customer_filters</strong>: Filters for customer data</div>
+            <div><strong>account_filters</strong>: Filters for account data</div>
+            <div><strong>cust</strong>: Optional pre-filtered customer DataFrame</div>
+            <div><strong>acc</strong>: Optional pre-filtered account DataFrame</div>
+          </div>
+        </div>
+
+        <!-- get_cust_tran -->
+        <div class="function-card p-3 rounded-md cursor-pointer border border-gray-200" onclick="toggleDescription('get_cust_tran_desc')">
+          <div class="flex items-center gap-2">
+            <span class="level-badge badge-1">L1</span>
+            <div class="font-semibold text-gray-800">get_cust_tran</div>
+          </div>
+          <div class="text-sm text-gray-600 mt-1">Joins customer and transaction data</div>
+          <div id="get_cust_tran_desc" class="param-description mt-2 text-sm space-y-1 hidden">
+            <div><strong>join_type</strong>: Type of join ('left', 'inner')</div>
+            <div><strong>customer_on</strong>: Key(s) from customer table</div>
+            <div><strong>transaction_on</strong>: Key(s) from transaction table</div>
+            <div><strong>customer_filters</strong>: Filters for customers</div>
+            <div><strong>transaction_filters</strong>: Filters for transactions</div>
+            <div><strong>cust</strong>: Optional pre-filtered customer DataFrame</div>
+            <div><strong>tran</strong>: Optional pre-filtered transaction DataFrame</div>
+          </div>
+        </div>
+
+        <!-- get_acc_tran -->
+        <div class="function-card p-3 rounded-md cursor-pointer border border-gray-200" onclick="toggleDescription('get_acc_tran_desc')">
+          <div class="flex items-center gap-2">
+            <span class="level-badge badge-1">L1</span>
+            <div class="font-semibold text-gray-800">get_acc_tran</div>
+          </div>
+          <div class="text-sm text-gray-600 mt-1">Joins account and transaction data</div>
+          <div id="get_acc_tran_desc" class="param-description mt-2 text-sm space-y-1 hidden">
+            <div><strong>join_type</strong>: Type of join ('left', 'inner')</div>
+            <div><strong>account_on</strong>: Key(s) from account table</div>
+            <div><strong>transaction_on</strong>: Key(s) from transaction table</div>
+            <div><strong>account_filters</strong>: Filters for accounts</div>
+            <div><strong>transaction_filters</strong>: Filters for transactions</div>
+            <div><strong>acc</strong>: Optional pre-filtered account DataFrame</div>
+            <div><strong>tran</strong>: Optional pre-filtered transaction DataFrame</div>
+          </div>
+        </div>
+
+        <!-- get_cust_acc_tran -->
+        <div class="function-card p-3 rounded-md cursor-pointer border border-gray-200" onclick="toggleDescription('get_cust_acc_tran_desc')">
+          <div class="flex items-center gap-2">
+            <span class="level-badge badge-2">L2</span>
+            <div class="font-semibold text-gray-800">get_cust_acc_tran</div>
+          </div>
+          <div class="text-sm text-gray-600 mt-1">Joins customer, account, and transaction data</div>
+          <div id="get_cust_acc_tran_desc" class="param-description mt-2 text-sm space-y-1 hidden">
+            <div><strong>join_type</strong>: Type of join ('left', 'inner')</div>
+            <div><strong>customer_filters</strong>: Filters for customers</div>
+            <div><strong>account_filters</strong>: Filters for accounts</div>
+            <div><strong>transaction_filters</strong>: Filters for transactions</div>
+            <div><strong>customer_account_key</strong>: Join key(s) between customers and accounts</div>
+            <div><strong>account_transaction_key</strong>: Join key(s) between accounts and transactions</div>
+            <div><strong>cust</strong>: Optional pre-filtered customers DataFrame</div>
+            <div><strong>acc</strong>: Optional pre-filtered accounts DataFrame</div>
+            <div><strong>tran</strong>: Optional pre-filtered transactions DataFrame</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleDescription(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('hidden');
+}
+</script>
+
+
+      <!-- Function Execution -->
+      <div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Select Function</label>
+          <select id="function_select" onchange="updateFunctionFields()" class="border px-3 py-2 rounded-md w-full">
+            <option value="get_customers">get_customers</option>
+            <option value="get_accounts">get_accounts</option>
+            <option value="get_transactions">get_transactions</option>
+            <option value="get_cust_acc">get_cust_acc</option>
+            <option value="get_cust_tran">get_cust_tran</option>
+            <option value="get_acc_tran">get_acc_tran</option>
+            <option value="get_cust_acc_tran">get_cust_acc_tran</option>
+          </select>
+        </div>
+
+        <div id="function_inputs" class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4"></div>
+
+        <button onclick="runFunction()" class="deloitte-btn-primary w-full px-4 py-2 rounded-md font-medium">
+          <i class="fas fa-play mr-2"></i>Execute Function
+        </button>
+
+        <div class="mt-4">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Results</label>
+          <div id="function_output" class="bg-gray-50 p-4 rounded-md overflow-auto text-sm border border-gray-200 max-h-60"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Rule Section -->
+  <div class="mt-6 deloitte-card p-6">
+    <h2 class="section-title text-xl font-semibold mb-4">❌ Rule Management</h2>
+    <div class="flex items-center space-x-3">
+      <input id="delete_rule_id" class="border px-3 py-2 rounded-md flex-grow" placeholder="Enter Rule ID to Delete">
+      <button onclick="deleteRule()" class="deloitte-btn-primary px-4 py-2 rounded-md font-medium bg-red-600 hover:bg-red-700">
+        <i class="fas fa-trash-alt mr-1"></i>Delete Rule
+      </button>
+    </div>
+  </div>
+</main>
+
+<script>
+  const functionParams = {
+    get_customers: ["customer_id","name", "city", "update_date", "exact_match", "min_update_date", "max_update_date"],
+    get_accounts: ["account_no", "account_type", "customer_id", "account_status", "activation_date", "exact_match", "min_activation_date", "max_activation_date"],
+    get_transactions: ["transaction_id", "account_no", "customer_id", "amount", "transaction_time", "min_transaction_time", "max_transaction_time", "min_amount", "max_amount"],
+    get_cust_acc: ["join_type", "customer_on", "account_on", "customer_filters", "account_filters"],
+    get_cust_tran: ["join_type", "customer_on", "transaction_on", "customer_filters", "transaction_filters"],
+    get_acc_tran: ["join_type", "account_on", "transaction_on", "account_filters", "transaction_filters"],
+    get_cust_acc_tran: ["join_type", "customer_account_key", "account_transaction_key", "customer_filters", "account_filters", "transaction_filters"]
+  };
+
+  function toggleDescription(id) {
+    const desc = document.getElementById(id);
+    desc.style.display = desc.style.display === 'none' ? 'block' : 'none';
+  }
+
+  function fetchRules() {
+    fetch('/rules')
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("rules").textContent = data;
+        // Update rules count
+        const rules = data.split('\n').filter(line => line.trim().startsWith('rule_'));
+        document.getElementById("rules-count").textContent = rules.length;
+      });
+  }
+
+  function runRule() {
+    const ruleId = document.getElementById("rule_id_input").value;
+    if (!ruleId) return alert("Please enter a rule ID");
+
+    fetch('/run_rule/' + ruleId)
+      .then(res => res.json())
+      .then(data => {
+        displayTable("rule_output", data.result);
+      })
+      .catch(err => alert("Rule Error: " + err));
+  }
+
+    function runFunction() {
+  const func = document.getElementById("function_select").value;
+  const inputs = document.querySelectorAll("#function_inputs input, #function_inputs select");
+  const params = {};
+
+  inputs.forEach(input => {
+    let value = input.value.trim();
+    if (!value) return;
+
+    // If comma-separated → turn into array
+    if (value.includes(',')) {
+      const items = value.split(',').map(v => v.trim());
+      params[input.name] = items.map(v => {
+        if (v.toLowerCase() === "true") return true;
+        if (v.toLowerCase() === "false") return false;
+        return isNaN(v) ? v : parseFloat(v);
+      });
+    } else {
+      if (value.toLowerCase() === "true") {
+        params[input.name] = true;
+      } else if (value.toLowerCase() === "false") {
+        params[input.name] = false;
+      } else {
+        params[input.name] = isNaN(value) ? value : parseFloat(value);
+      }
+    }
+  });
+
+  fetch('/run_function', {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ function_name: func, parameters: params })
+  })
+  .then(res => res.json())
+  .then(data => displayTable("function_output", data))
+  .catch(err => alert("Function Error: " + err));
+}
+
+
+
+  function displayTable(divId, data) {
+    const div = document.getElementById(divId);
+    if (!data || data.length === 0) {
+      div.innerHTML = "<div class='text-center py-4 text-gray-500'>No data returned</div>";
+      return;
+    }
+
+    const keys = Object.keys(data[0]);
+    let html = "<div class='overflow-x-auto'><table class='min-w-full divide-y divide-gray-200'><thead class='bg-gray-100'><tr>";
+    keys.forEach(key => {
+      html += `<th scope='col' class='px-4 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider'>${key}</th>`;
+    });
+    html += "</tr></thead><tbody class='bg-white divide-y divide-gray-200'>";
+
+    data.slice(0, 100).forEach((row, i) => {
+      html += "<tr class='" + (i % 2 === 0 ? 'bg-white' : 'bg-gray-50') + "'>";
+      keys.forEach(key => {
+        const val = row[key];
+        html += `<td class='px-4 py-2 text-sm ${typeof val === 'number' ? 'text-right font-mono' : 'text-left'}'>${val || ''}</td>`;
+      });
+      html += "</tr>";
+    });
+    html += "</tbody></table></div>";
+
+    if (data.length > 100) {
+      html += `<div class='text-xs text-gray-500 mt-2'>Showing 100 of ${data.length} rows</div>`;
+    }
+
+    div.innerHTML = html;
+  }
+
+  function updateFunctionFields() {
+    const func = document.getElementById("function_select").value;
+    const container = document.getElementById("function_inputs");
+    container.innerHTML = "";
+    (functionParams[func] || []).forEach(p => {
+      const div = document.createElement("div");
+      div.className = "space-y-1";
+
+      const label = document.createElement("label");
+      label.textContent = p;
+      label.className = "block text-sm font-medium text-gray-700";
+
+      const input = document.createElement("input");
+      input.name = p;
+      input.placeholder = p;
+      input.className = "w-full border px-3 py-2 rounded-md text-sm";
+
+      div.appendChild(label);
+      div.appendChild(input);
+      container.appendChild(div);
+    });
+  }
+
+  function addRule() {
+    const form = document.getElementById("add_rule_form");
+    const data = Object.fromEntries(new FormData(form).entries());
+
+    // Basic validation
+    if (!data.rule_id || !data.description) {
+      return alert("Please fill in all required fields");
+    }
+
+    if (data.value && !isNaN(data.value)) data.value = parseFloat(data.value);
+    data.extra = {};
+
+    fetch('/add_rule', {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    }).then(res => {
+      if (res.ok) {
+        alert("✅ Rule added successfully");
+        fetchRules();
+        form.reset();
+      }
+      else res.json().then(e => alert("Error: " + (e.detail || "Failed to add rule")));
+    });
+  }
+
+  function deleteRule() {
+    const id = document.getElementById("delete_rule_id").value;
+    if (!id) return alert("Please enter a rule ID");
+
+    if (!confirm(`Are you sure you want to delete rule ${id}?`)) return;
+
+    fetch('/delete_rule/' + id, { method: "DELETE" })
+      .then(res => {
+        if (res.ok) {
+          alert("🗑️ Rule deleted successfully");
+          fetchRules();
+          document.getElementById("delete_rule_id").value = "";
+        }
+        else res.json().then(e => alert("Error: " + (e.detail || "Failed to delete rule")));
+      });
+  }
+
+  // Initialize
+  document.addEventListener('DOMContentLoaded', function() {
+    updateFunctionFields();
+    fetchRules();
+  });
+</script>
+</body>
+</html>

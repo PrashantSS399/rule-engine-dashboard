@@ -1,0 +1,280 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mb-6">
+  <h2 class="text-2xl font-semibold text-gray-800 mb-1">Data Functions</h2>
+  <p class="text-gray-600">Execute and manage data retrieval functions</p>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <div class="lg:col-span-1">
+    <div class="deloitte-card p-6 h-full">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">Function Categories</h3>
+
+      <div class="space-y-4">
+        <div class="p-4 rounded-md border border-green-100 bg-green-50">
+          <div class="flex items-center mb-2">
+            <span class="level-badge badge-0 mr-2">Level 0</span>
+            <h4 class="font-medium">Basic Retrieval</h4>
+          </div>
+          <p class="text-sm text-gray-600">Fetch raw, unjoined data from individual tables with flexible filtering.</p>
+        </div>
+
+        <div class="p-4 rounded-md border border-yellow-100 bg-yellow-50">
+          <div class="flex items-center mb-2">
+            <span class="level-badge badge-1 mr-2">Level 1</span>
+            <h4 class="font-medium">Joined Data</h4>
+          </div>
+          <p class="text-sm text-gray-600">Combine two related entities with configurable join conditions and filters.</p>
+        </div>
+
+        <div class="p-4 rounded-md border border-red-100 bg-red-50">
+          <div class="flex items-center mb-2">
+            <span class="level-badge badge-2 mr-2">Level 2</span>
+            <h4 class="font-medium">Super Function</h4>
+          </div>
+          <p class="text-sm text-gray-600">Comprehensive analysis joining all three core tables with advanced filtering.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lg:col-span-2">
+    <div class="deloitte-card p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-semibold text-gray-800">Execute Function</h3>
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Select Function</label>
+        <select id="functionSelect" onchange="updateFunctionFields()" class="w-full border px-3 py-2 rounded-md">
+          <option value="">-- Select a function --</option>
+          <optgroup label="Level 0 - Basic Retrieval">
+            <option value="get_customers">get_customers</option>
+            <option value="get_accounts">get_accounts</option>
+            <option value="get_transactions">get_transactions</option>
+          </optgroup>
+          <optgroup label="Level 1 - Joined Data">
+            <option value="get_cust_acc">get_cust_acc</option>
+            <option value="get_cust_tran">get_cust_tran</option>
+            <option value="get_acc_tran">get_acc_tran</option>
+          </optgroup>
+          <optgroup label="Level 2 - Super Function">
+            <option value="get_cust_acc_tran">get_cust_acc_tran</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div id="functionParams" class="space-y-4 mb-4">
+        <!-- Parameters will be loaded here -->
+        <div class="text-center py-8 text-gray-400">
+          <i class="fas fa-functions text-3xl mb-2"></i>
+          <p>Select a function to view parameters</p>
+        </div>
+      </div>
+
+      <button onclick="runFunction()" class="deloitte-btn-primary w-full px-4 py-2 rounded-md font-medium">
+        <i class="fas fa-play mr-2"></i>Execute Function
+      </button>
+    </div>
+
+    <div class="deloitte-card p-6 mt-6">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">Results</h3>
+      <div id="functionOutput" class="bg-gray-50 rounded-md overflow-hidden border border-gray-200">
+        <div class="text-center py-8 text-gray-400">
+          <i class="fas fa-table text-3xl mb-2"></i>
+          <p>Results will appear here after execution</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const functionDefinitions = {
+    get_customers: {
+      description: "Retrieve customer data with various filtering options",
+      level: 0,
+      parameters: [
+        { name: "customer_id", type: "string|array", description: "ID(s) of customers to retrieve" },
+        { name: "name", type: "string", description: "Exact or partial match for customer name" },
+        { name: "city", type: "string|array", description: "Filter by city name(s)" },
+        { name: "update_date", type: "string|array", description: "Filter specific dates (YYYY-MM-DD)" },
+        { name: "exact_match", type: "boolean", description: "Set to false for partial matching" },
+        { name: "min_update_date", type: "string", description: "Minimum date for update_date range" },
+        { name: "max_update_date", type: "string", description: "Maximum date for update_date range" }
+      ]
+    },
+    get_accounts: {
+      description: "Retrieve account data with filtering capabilities",
+      level: 0,
+      parameters: [
+        { name: "account_no", type: "string|array", description: "One or more account numbers" },
+        { name: "account_type", type: "string|array", description: "Account type (e.g., savings, current)" },
+        { name: "customer_id", type: "string|array", description: "Filter by customer IDs" },
+        { name: "account_status", type: "string|array", description: "e.g., active, closed" },
+        { name: "activation_date", type: "string|array", description: "Filter by activation date(s)" },
+        { name: "exact_match", type: "boolean", description: "Set to false for partial search" },
+        { name: "min_activation_date", type: "string", description: "Minimum activation date" },
+        { name: "max_activation_date", type: "string", description: "Maximum activation date" }
+      ]
+    },
+    get_transactions: {
+      description: "Retrieve transaction data with various filters",
+      level: 0,
+      parameters: [
+        { name: "transaction_id", type: "string|array", description: "Filter by transaction ID(s)" },
+        { name: "account_no", type: "string|array", description: "Account numbers involved" },
+        { name: "customer_id", type: "string|array", description: "Customer IDs involved" },
+        { name: "amount", type: "number|array", description: "Exact amount value(s)" },
+        { name: "min_amount", type: "number", description: "Minimum transaction amount" },
+        { name: "max_amount", type: "number", description: "Maximum transaction amount" },
+        { name: "transaction_time", type: "string|array", description: "Specific transaction timestamp(s)" },
+        { name: "min_transaction_time", type: "string", description: "Earliest transaction time" },
+        { name: "max_transaction_time", type: "string", description: "Latest transaction time" }
+      ]
+    },
+    get_cust_acc: {
+      description: "Join customer and account data",
+      level: 1,
+      parameters: [
+        { name: "join_type", type: "string", description: "Type of join ('left', 'inner')" },
+        { name: "customer_on", type: "string|array", description: "Column(s) in customer data to join on" },
+        { name: "account_on", type: "string|array", description: "Column(s) in account data to join on" },
+        { name: "customer_filters", type: "object", description: "Filters for customer data" },
+        { name: "account_filters", type: "object", description: "Filters for account data" }
+      ]
+    },
+    get_cust_tran: {
+      description: "Join customer and transaction data",
+      level: 1,
+      parameters: [
+        { name: "join_type", type: "string", description: "Type of join ('left', 'inner')" },
+        { name: "customer_on", type: "string|array", description: "Key(s) from customer table" },
+        { name: "transaction_on", type: "string|array", description: "Key(s) from transaction table" },
+        { name: "customer_filters", type: "object", description: "Filters for customers" },
+        { name: "transaction_filters", type: "object", description: "Filters for transactions" }
+      ]
+    },
+    get_acc_tran: {
+      description: "Join account and transaction data",
+      level: 1,
+      parameters: [
+        { name: "join_type", type: "string", description: "Type of join ('left', 'inner')" },
+        { name: "account_on", type: "string|array", description: "Key(s) from account table" },
+        { name: "transaction_on", type: "string|array", description: "Key(s) from transaction table" },
+        { name: "account_filters", type: "object", description: "Filters for accounts" },
+        { name: "transaction_filters", type: "object", description: "Filters for transactions" }
+      ]
+    },
+    get_cust_acc_tran: {
+      description: "Join all three core tables (customers, accounts, transactions)",
+      level: 2,
+      parameters: [
+        { name: "join_type", type: "string", description: "Type of join ('left', 'inner')" },
+        { name: "customer_account_key", type: "string|array", description: "Join key(s) between customers and accounts" },
+        { name: "account_transaction_key", type: "string|array", description: "Join key(s) between accounts and transactions" },
+        { name: "customer_filters", type: "object", description: "Filters for customers" },
+        { name: "account_filters", type: "object", description: "Filters for accounts" },
+        { name: "transaction_filters", type: "object", description: "Filters for transactions" }
+      ]
+    }
+  };
+
+  function updateFunctionFields() {
+    const funcName = document.getElementById('functionSelect').value;
+    const paramsContainer = document.getElementById('functionParams');
+
+    if (!funcName) {
+      paramsContainer.innerHTML = `
+        <div class="text-center py-8 text-gray-400">
+          <i class="fas fa-functions text-3xl mb-2"></i>
+          <p>Select a function to view parameters</p>
+        </div>
+      `;
+      return;
+    }
+
+    const func = functionDefinitions[funcName];
+    let html = `
+      <div class="mb-4 p-3 bg-gray-50 rounded-md">
+        <h4 class="font-medium text-gray-800 mb-1">${funcName}</h4>
+        <p class="text-sm text-gray-600">${func.description}</p>
+      </div>
+    `;
+
+    func.parameters.forEach(param => {
+      html += `
+        <div class="space-y-1">
+          <label class="block text-sm font-medium text-gray-700">
+            ${param.name}
+            <span class="text-xs font-normal text-gray-500 ml-1">(${param.type})</span>
+          </label>
+          <input name="${param.name}" class="w-full border px-3 py-2 rounded-md text-sm" placeholder="${param.description}">
+        </div>
+      `;
+    });
+
+    paramsContainer.innerHTML = html;
+  }
+
+  function runFunction() {
+    const funcName = document.getElementById('functionSelect').value;
+    if (!funcName) {
+      alert('Please select a function first');
+      return;
+    }
+
+    const inputs = document.querySelectorAll('#functionParams input');
+    const params = {};
+    inputs.forEach(input => {
+      if (input.value) {
+        // Try to parse numbers if possible
+        params[input.name] = isNaN(input.value) ? input.value : parseFloat(input.value);
+      }
+    });
+
+    // Simulate API call
+    const outputContainer = document.getElementById('functionOutput');
+    outputContainer.innerHTML = `
+      <div class="p-4">
+        <div class="flex items-center justify-between mb-2">
+          <h4 class="font-medium">Executing: ${funcName}</h4>
+          <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Success</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Value</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              ${Array.from({length: 5}, (_, i) => `
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${i+1}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Sample Data ${i+1}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${Math.floor(Math.random() * 1000)}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2023-06-${10+i}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+        <div class="mt-2 text-xs text-gray-500">
+          Showing 5 of ${Math.floor(Math.random() * 100) + 10} rows
+        </div>
+      </div>
+    `;
+  }
+
+  // Initialize
+  document.addEventListener('DOMContentLoaded', function() {
+    // Any initialization code if needed
+  });
+</script>
+{% endblock %}

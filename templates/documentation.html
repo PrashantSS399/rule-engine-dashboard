@@ -1,0 +1,193 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mb-6">
+  <h2 class="text-2xl font-semibold text-gray-800 mb-1">Documentation</h2>
+  <p class="text-gray-600">Comprehensive guide to using the Business Rule Engine</p>
+</div>
+
+<div class="deloitte-card p-6">
+  <div class="space-y-8">
+    <section>
+      <h3 class="text-xl font-semibold text-gray-800 mb-4">Levels Overview</h3>
+
+      <div class="space-y-6">
+        <div class="p-5 border border-green-100 rounded-lg bg-green-50">
+          <div class="flex items-center mb-3">
+            <span class="level-badge badge-0 mr-3">Level 0</span>
+            <h4 class="text-lg font-medium text-gray-800">Basic Data Retrieval</h4>
+          </div>
+          <div class="pl-12 space-y-2">
+            <p class="text-gray-700">These are the foundational functions that fetch raw, unjoined data directly from the database tables. They provide the building blocks for all analysis and are optimized for flexible filtering.</p>
+            <ul class="list-disc pl-5 text-gray-600 space-y-1">
+              <li>Direct access to single-table data</li>
+              <li>Multiple filtering options for precise queries</li>
+              <li>Support for exact and partial matching</li>
+              <li>Date range filtering capabilities</li>
+              <li>Lightweight and fast execution</li>
+            </ul>
+            <p class="text-sm text-gray-500 mt-2"><strong>Example Use Cases:</strong> Customer lookup, account verification, transaction auditing</p>
+          </div>
+        </div>
+
+        <div class="p-5 border border-yellow-100 rounded-lg bg-yellow-50">
+          <div class="flex items-center mb-3">
+            <span class="level-badge badge-1 mr-3">Level 1</span>
+            <h4 class="text-lg font-medium text-gray-800">Joined Data Retrieval</h4>
+          </div>
+          <div class="pl-12 space-y-2">
+            <p class="text-gray-700">These functions combine two related entities through configurable join operations, enabling relationship analysis and cross-table validation.</p>
+            <ul class="list-disc pl-5 text-gray-600 space-y-1">
+              <li>Flexible join types (inner, left, etc.)</li>
+              <li>Configurable join keys</li>
+              <li>Pre-join filtering options</li>
+              <li>Post-join filtering capabilities</li>
+              <li>Optimized for common join patterns</li>
+            </ul>
+            <p class="text-sm text-gray-500 mt-2"><strong>Example Use Cases:</strong> Customer-account matching, transaction verification, relationship analysis</p>
+          </div>
+        </div>
+
+        <div class="p-5 border border-red-100 rounded-lg bg-red-50">
+          <div class="flex items-center mb-3">
+            <span class="level-badge badge-2 mr-3">Level 2</span>
+            <h4 class="text-lg font-medium text-gray-800">Super Function</h4>
+          </div>
+          <div class="pl-12 space-y-2">
+            <p class="text-gray-700">This comprehensive function joins all three core tables (customers, accounts, transactions) to enable complete lifecycle analysis and complex business rule implementation.</p>
+            <ul class="list-disc pl-5 text-gray-600 space-y-1">
+              <li>End-to-end data correlation</li>
+              <li>Configurable join paths</li>
+              <li>Granular filtering at each level</li>
+              <li>Support for complex analytics</li>
+              <li>Traceability across entities</li>
+            </ul>
+            <p class="text-sm text-gray-500 mt-2"><strong>Example Use Cases:</strong> Fraud detection, customer behavior analysis, compliance monitoring</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h3 class="text-xl font-semibold text-gray-800 mb-4">Function Reference</h3>
+
+      <div class="space-y-4">
+        <div class="border rounded-lg overflow-hidden">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Function</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Level</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Parameters</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">get_customers</td>
+                <td class="px-6 py-4 whitespace-nowrap"><span class="level-badge badge-0">0</span></td>
+                <td class="px-6 py-4 text-sm text-gray-500">Retrieve customer data with various filtering options</td>
+                <td class="px-6 py-4 text-sm text-gray-500">customer_id, name, city, update_date, exact_match, min/max_update_date</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">get_accounts</td>
+                <td class="px-6 py-4 whitespace-nowrap"><span class="level-badge badge-0">0</span></td>
+                <td class="px-6 py-4 text-sm text-gray-500">Retrieve account data with filtering capabilities</td>
+                <td class="px-6 py-4 text-sm text-gray-500">account_no, account_type, customer_id, account_status, activation_date, exact_match, min/max_activation_date</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">get_transactions</td>
+                <td class="px-6 py-4 whitespace-nowrap"><span class="level-badge badge-0">0</span></td>
+                <td class="px-6 py-4 text-sm text-gray-500">Retrieve transaction data with various filters</td>
+                <td class="px-6 py-4 text-sm text-gray-500">transaction_id, account_no, customer_id, amount, min/max_amount, transaction_time, min/max_transaction_time</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">get_cust_acc</td>
+                <td class="px-6 py-4 whitespace-nowrap"><span class="level-badge badge-1">1</span></td>
+                <td class="px-6 py-4 text-sm text-gray-500">Join customer and account data</td>
+                <td class="px-6 py-4 text-sm text-gray-500">join_type, customer_on, account_on, customer_filters, account_filters</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">get_cust_tran</td>
+                <td class="px-6 py-4 whitespace-nowrap"><span class="level-badge badge-1">1</span></td>
+                <td class="px-6 py-4 text-sm text-gray-500">Join customer and transaction data</td>
+                <td class="px-6 py-4 text-sm text-gray-500">join_type, customer_on, transaction_on, customer_filters, transaction_filters</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">get_acc_tran</td>
+                <td class="px-6 py-4 whitespace-nowrap"><span class="level-badge badge-1">1</span></td>
+                <td class="px-6 py-4 text-sm text-gray-500">Join account and transaction data</td>
+                <td class="px-6 py-4 text-sm text-gray-500">join_type, account_on, transaction_on, account_filters, transaction_filters</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">get_cust_acc_tran</td>
+                <td class="px-6 py-4 whitespace-nowrap"><span class="level-badge badge-2">2</span></td>
+                <td class="px-6 py-4 text-sm text-gray-500">Join all three core tables</td>
+                <td class="px-6 py-4 text-sm text-gray-500">join_type, customer_account_key, account_transaction_key, customer_filters, account_filters, transaction_filters</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h3 class="text-xl font-semibold text-gray-800 mb-4">Rule Creation Guide</h3>
+
+      <div class="space-y-4">
+        <div class="p-4 border rounded-lg bg-gray-50">
+          <h4 class="font-medium text-gray-800 mb-2">Basic Rule Structure</h4>
+          <div class="bg-gray-800 text-green-400 p-3 rounded-md font-mono text-sm overflow-x-auto">
+            <pre>rule_id: unique_identifier
+description: "Description of rule purpose"
+level: 0 | 1 | 2
+function_name: "name_of_function"
+column: "column_to_evaluate"
+condition: "> | < | == | contains"
+value: threshold_value
+code: "optional_custom_code"</pre>
+          </div>
+        </div>
+
+        <div class="p-4 border rounded-lg bg-gray-50">
+          <h4 class="font-medium text-gray-800 mb-2">Example Rules</h4>
+
+          <div class="space-y-3">
+            <div>
+              <p class="text-sm font-medium text-gray-700">Level 0 Example:</p>
+              <div class="bg-gray-100 p-2 rounded text-sm font-mono">
+                rule_01: Identify inactive customers<br>
+                function_name: get_customers<br>
+                column: last_activity<br>
+                condition: "<"<br>
+                value: "2023-01-01"
+              </div>
+            </div>
+
+            <div>
+              <p class="text-sm font-medium text-gray-700">Level 1 Example:</p>
+              <div class="bg-gray-100 p-2 rounded text-sm font-mono">
+                rule_02: Flag high balance accounts<br>
+                function_name: get_cust_acc<br>
+                column: balance<br>
+                condition: ">"<br>
+                value: 10000
+              </div>
+            </div>
+
+            <div>
+              <p class="text-sm font-medium text-gray-700">Level 2 Example:</p>
+              <div class="bg-gray-100 p-2 rounded text-sm font-mono">
+                rule_03: Detect suspicious patterns<br>
+                function_name: get_cust_acc_tran<br>
+                code: "df[(df.amount > 5000) & (df.frequency > 5)]"
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %}

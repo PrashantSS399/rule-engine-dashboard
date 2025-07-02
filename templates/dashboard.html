@@ -1,0 +1,93 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mb-8">
+  <h2 class="text-2xl font-semibold text-gray-800 mb-2">Rule Engine Dashboard</h2>
+  <p class="text-gray-600">Monitor and manage business rules across customer, account, and transaction data.</p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+  <div class="deloitte-card p-6">
+    <div class="flex items-center">
+      <div class="p-3 rounded-full bg-green-100 text-green-600 mr-4">
+        <i class="fas fa-list-check text-lg"></i>
+      </div>
+      <div>
+        <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider">Total Rules</h3>
+        <p class="text-2xl font-bold text-gray-800">15</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="deloitte-card p-6">
+    <div class="flex items-center">
+      <div class="p-3 rounded-full bg-blue-100 text-blue-600 mr-4">
+        <i class="fas fa-database text-lg"></i>
+      </div>
+      <div>
+        <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider">Data Functions</h3>
+        <p class="text-2xl font-bold text-gray-800">7</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="deloitte-card p-6">
+    <div class="flex items-center">
+      <div class="p-3 rounded-full bg-purple-100 text-purple-600 mr-4">
+        <i class="fas fa-layer-group text-lg"></i>
+      </div>
+      <div>
+        <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider">Data Levels</h3>
+        <p class="text-2xl font-bold text-gray-800">3</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <div class="deloitte-card p-6">
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">Recent Activity</h3>
+    <div class="space-y-4">
+      <div class="flex items-start">
+        <div class="p-2 rounded-full bg-green-100 text-green-600 mr-3 mt-1">
+          <i class="fas fa-plus text-xs"></i>
+        </div>
+        <div>
+          <p class="text-sm font-medium">New rule added</p>
+          <p class="text-xs text-gray-500">Rule "high_value_transaction" was created</p>
+          <p class="text-xs text-gray-400">2 hours ago</p>
+        </div>
+      </div>
+      <div class="flex items-start">
+        <div class="p-2 rounded-full bg-blue-100 text-blue-600 mr-3 mt-1">
+          <i class="fas fa-play text-xs"></i>
+        </div>
+        <div>
+          <p class="text-sm font-medium">Rule executed</p>
+          <p class="text-xs text-gray-500">"suspicious_activity" was run successfully</p>
+          <p class="text-xs text-gray-400">5 hours ago</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="deloitte-card p-6">
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h3>
+    <div class="grid grid-cols-2 gap-4">
+      <a href="/rules" class="deloitte-card p-4 text-center hover:bg-gray-50 transition-colors">
+        <div class="p-2 rounded-full bg-gray-100 text-gray-600 mx-auto mb-2">
+          <i class="fas fa-list-ol"></i>
+        </div>
+        <p class="text-sm font-medium">View Rules</p>
+      </a>
+      <a href="/functions" class="deloitte-card p-4 text-center hover:bg-gray-50 transition-colors">
+        <div class="p-2 rounded-full bg-gray-100 text-gray-600 mx-auto mb-2">
+          <i class="fas fa-functions"></i>
+        </div>
+        <p class="text-sm font-medium">Run Function</p>
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}
