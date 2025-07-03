@@ -288,8 +288,8 @@
         </form>
 
         <button onclick="addRule()" class="deloitte-btn-primary w-full mt-3 px-4 py-2 rounded-md font-medium">
-          <i class="fas fa-plus mr-2"></i>Add Rule
-        </button>
+  <i class="fas fa-plus mr-2"></i>Add Rule
+</button>
       </div>
     </div>
   </div>
@@ -634,31 +634,43 @@ function toggleDescription(id) {
     });
   }
 
-  function addRule() {
-    const form = document.getElementById("add_rule_form");
-    const data = Object.fromEntries(new FormData(form).entries());
+function addRule() {
+  const form = document.getElementById("add_rule_form");
+  const data = Object.fromEntries(new FormData(form).entries());
 
-    // Basic validation
-    if (!data.rule_id || !data.description) {
-      return alert("Please fill in all required fields");
-    }
-
-    if (data.value && !isNaN(data.value)) data.value = parseFloat(data.value);
-    data.extra = {};
-
-    fetch('/add_rule', {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    }).then(res => {
-      if (res.ok) {
-        alert("✅ Rule added successfully");
-        fetchRules();
-        form.reset();
-      }
-      else res.json().then(e => alert("Error: " + (e.detail || "Failed to add rule")));
-    });
+  if (!data.rule_id || !data.description) {
+    return alert("❌ Please fill in all required fields");
   }
+
+  const isBasicRule = data.function_name && data.column && data.condition && data.value;
+  const isCustomCode = data.code && data.code.trim() !== "";
+
+  if (!isBasicRule && !isCustomCode) {
+    return alert("❌ Please fill either the rule fields OR provide custom code.");
+  }
+
+  if (data.value && !isNaN(data.value)) {
+    data.value = parseFloat(data.value);
+  }
+
+  data.extra = {};
+
+  fetch('/add_rule', {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  }).then(res => {
+    if (res.ok) {
+      alert("✅ Rule added successfully");
+      fetchRules();
+      form.reset();
+    } else {
+      res.json().then(e => alert("❌ Error: " + (e.detail || "Failed to add rule")));
+    }
+  });
+}
+
+
 
   function deleteRule() {
     const id = document.getElementById("delete_rule_id").value;
@@ -728,6 +740,5 @@ function populateColumns() {
 }
 
 </script>
-
 </body>
 </html>
