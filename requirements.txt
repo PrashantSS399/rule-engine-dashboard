@@ -81,7 +81,7 @@ python-dotenv==1.1.1
 
 python-multipart==0.0.20
 
-pywin32==308
+pywin32==none
 
 
 rich==14.0.0
